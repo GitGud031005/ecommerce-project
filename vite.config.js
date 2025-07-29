@@ -4,4 +4,14 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    proxy: {
+      '/api': { // url start with /api will have shortcut b4
+        target: 'http://localhost:3000'
+      },
+      '/images': {
+        target: 'http://localhost:3000'
+      }
+    }
+  }
 })
