@@ -1,7 +1,8 @@
 import moneyFormat from "../../utils/money";
 import dayjs from "dayjs";
 import { DeliveryOptions } from "./DeliveryOptions";
-export function OrderSummary({ cart, deliOption }) {
+import axios from "axios";
+export function OrderSummary({ cart, deliOption, loadCart }) {
     return (
         <div className="order-summary">
             {deliOption.length > 0 && cart.map((item) => {
@@ -9,6 +10,11 @@ export function OrderSummary({ cart, deliOption }) {
                     return opt.id === item.deliveryOptionId;
                 });
 
+                const deleteItem = async () => 
+                {
+                    await axios.delete(`/api/cart-items/${item.productId}`);
+                    await loadCart();
+                }
                 console.log(selectedopt);
 
                 return (
@@ -37,13 +43,14 @@ export function OrderSummary({ cart, deliOption }) {
                                     <span className="update-quantity-link link-primary">
                                         Update
                                     </span>
-                                    <span className="delete-quantity-link link-primary">
+                                    <span className="delete-quantity-link link-primary"
+                                    onClick={deleteItem}>
                                         Delete
                                     </span>
                                 </div>
                             </div>
 
-                            <DeliveryOptions deliOption={deliOption} item={item} />
+                            <DeliveryOptions deliOption={deliOption} item={item} loadCart={loadCart} />
                         </div>
                     </div>
                 );
